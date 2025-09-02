@@ -1,0 +1,120 @@
+1. Le Concept du Projet : "Budget Tracker API"
+Le Pitch :
+C'est le backend d'une application de finances personnelles. L'objectif n'est pas juste de stocker des données, mais de fournir à un utilisateur les outils pour comprendre ses habitudes financières. Un utilisateur peut enregistrer toutes ses transactions (dépenses et revenus) et l'API se charge de les organiser et de générer des statistiques utiles.
+
+Le Parcours Utilisateur :
+
+Un utilisateur crée un compte et se connecte de manière sécurisée.
+
+Il ajoute les différents "contenants" de son argent : son compte courant, son livret A, sa carte de crédit. Ce sont ses Comptes.
+
+Il crée ses propres étiquettes pour classer ses dépenses : "Courses", "Loyer", "Restaurant", "Salaire". Ce sont ses Catégories.
+
+Au quotidien, il enregistre chaque mouvement d'argent : "J'ai dépensé 15€ au restaurant depuis mon compte courant". C'est une Transaction.
+
+À la fin du mois, il veut savoir où est passé son argent. L'API doit pouvoir lui dire : "Ce mois-ci, tu as dépensé 250€ au restaurant" ou "Ta balance est positive de 500€". C'est la partie Analyse.
+
+2. Les Schémas de la Base de Données (Les Fondations)
+Pour que ce système fonctionne, la base de données doit être bien structurée (normalisée) pour éviter la redondance et garantir que les liens entre les données sont solides. Voici les plans de construction.
+
+[Image d'un diagramme entité-association pour une application de budget]
+
+<immersive type="text/markdown" title="Schéma de la Base de Données (Budget Tracker)">
+
+Table users
+C'est le point de départ. Chaque donnée dans l'application appartiendra à un utilisateur.
+
+id (Clé Primaire) : Identifiant unique pour chaque utilisateur (UUID).
+
+email (Unique) : Utilisé pour la connexion.
+
+password_hash : Le mot de passe, toujours stocké de manière sécurisée (haché).
+
+Table accounts
+Représente les comptes bancaires de l'utilisateur.
+
+id (Clé Primaire) : ID unique du compte.
+
+name : Nom donné par l'utilisateur (ex: "Compte Courant BNP").
+
+user_id (Clé Étrangère) : Le lien vers la table users. C'est ce qui garantit qu'un compte appartient à un et un seul utilisateur. C'est une relation One-to-Many (un utilisateur peut avoir plusieurs comptes).
+
+Table categories
+Les étiquettes que l'utilisateur crée.
+
+id (Clé Primaire) : ID unique de la catégorie.
+
+name : Nom de la catégorie (ex: "Restaurant").
+
+user_id (Clé Étrangère) : Le lien vers la table users, car chaque utilisateur a ses propres catégories.
+
+Table transactions
+C'est la table la plus importante. Elle ne contient presque aucune information propre, elle ne fait que connecter les autres tables.
+
+id (Clé Primaire) : ID unique de la transaction.
+
+amount : Le montant (ex: 15.50).
+
+type : 'expense' (dépense) ou 'income' (revenu).
+
+description : Une note (ex: "Déjeuner avec Paul").
+
+transaction_date : La date de la transaction.
+
+user_id (Clé Étrangère) : Qui a fait la transaction.
+
+account_id (Clé Étrangère) : De quel compte l'argent est-il parti/arrivé.
+
+category_id (Clé Étrangère) : Comment classer cette transaction.
+
+</immersive>
+
+3. Les Différentes Routes (L'Interface Publique de votre Projet)
+Chaque groupe de routes correspond à la gestion d'une des "ressources" que nous venons de définir.
+
+/auth (Routes d'Authentification)
+POST /register : Permet à une nouvelle personne de s'inscrire en fournissant un email et un mot de passe. Le service va hacher le mot de passe avant de le sauvegarder dans la table users.
+
+POST /login : Vérifie l'email et le mot de passe. Si c'est correct, il génère un token JWT (une sorte de badge d'accès temporaire) et le renvoie.
+
+GET /me : Permet à un utilisateur qui a un token valide de vérifier ses propres informations.
+
+/accounts, /categories, /transactions (Routes de Gestion - CRUD)
+Ces routes sont les opérations de base. Elles sont toutes protégées et ne fonctionnent que si l'utilisateur fournit son token JWT.
+
+POST / : Pour créer une nouvelle ressource (un nouveau compte, une nouvelle catégorie, etc.).
+
+GET / : Pour lister toutes les ressources de l'utilisateur (tous ses comptes, toutes ses catégories...).
+
+GET /:id : Pour récupérer une ressource spécifique.
+
+PUT /:id : Pour modifier une ressource existante.
+
+DELETE /:id : Pour supprimer une ressource.
+
+/stats & /reports (Routes d'Analyse - Le "Wow Factor")
+C'est ici que la logique "mathématique" intervient. Ces routes ne renvoient pas des données brutes, mais des données calculées.
+
+GET /stats/summary?month=...&year=... :
+
+Rôle : Fournir un résumé rapide pour un mois donné.
+
+Comment ça marche : Le service va chercher toutes les transactions de l'utilisateur pour ce mois, puis utilise des fonctions SQL comme SUM() pour calculer le total des revenus et le total des dépenses, et renvoie la différence.
+
+GET /reports/by-category?startDate=...&endDate=... :
+
+Rôle : Montrer à l'utilisateur où son argent est parti sur une période.
+
+Comment ça marche : C'est la requête la plus complexe. Le service va :
+
+Filtrer les transactions par date.
+
+Regrouper (GROUP BY) les transactions par category_id.
+
+Calculer la somme (SUM) des montants pour chaque groupe.
+
+Faire une jointure (JOIN) avec la table categories pour récupérer le nom de chaque catégorie.
+
+Renvoyer un rapport clair (ex: [{ "categorie": "Restaurant", "total": 250.00 }, ...]).
+
+Ce projet vous fait donc passer par toutes les étapes d'un développeur backend : modélisation des données, création d'une API sécurisée, et implémentation d'une logique métier complexe pour transformer des données brutes en informations utiles.

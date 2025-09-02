@@ -1,0 +1,108 @@
+# Budget Tracker API
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-C5F74F?style=for-the-badge) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+API RESTful sécurisée et performante pour la gestion de finances personnelles, construite avec Express.js, TypeScript et Drizzle ORM. Ce projet a été développé dans le but de maîtriser l'architecture backend "from scratch", la modélisation de données normalisée et l'écriture de requêtes SQL complexes.
+
+---
+
+## ✨ Fonctionnalités
+
+- **Authentification sécurisée** par JWT (connexion, inscription, routes protégées).
+- **Gestion multi-comptes** (comptes courants, épargne...).
+- **Catégorisation personnalisable** des transactions.
+- **CRUD complet** pour les transactions (dépenses et revenus).
+- **Endpoints d'analyse** pour générer des rapports agrégés (sommes, moyennes, regroupements).
+- **Validation des données entrantes** avec Zod pour une API robuste.
+
+---
+
+## 🛠️ Stack Technique
+
+- **Langage :** TypeScript
+- **Framework :** Node.js, Express.js
+- **Base de Données :** PostgreSQL
+- **ORM / Query Builder :** Drizzle ORM
+- **Validation :** Zod
+- **Authentification :** JWT (jsonwebtoken), bcryptjs
+- **Conteneurisation :** Docker (avec Docker Compose pour le développement)
+- **Outils :** Nodemon, ts-node
+
+---
+
+## 🚀 Démarrage Rapide (Getting Started)
+
+### Prérequis
+
+- Node.js (v18 ou supérieur)
+- NPM ou Yarn
+- Docker et Docker Compose
+
+### Installation
+
+1.  **Clonez le dépôt :**
+
+    ```bash
+    git clone [https://github.com/votre-nom/budget-tracker-api.git](https://github.com/votre-nom/budget-tracker-api.git)
+    cd budget-tracker-api
+    ```
+
+2.  **Installez les dépendances :**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Configurez les variables d'environnement :**
+    Créez un fichier `.env` à la racine du projet en vous basant sur le fichier `.env.example`.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Modifiez le fichier `.env` avec vos propres informations (clé secrète JWT, informations de la base de données).
+
+4.  **Lancez la base de données avec Docker :**
+
+    ```bash
+    docker-compose up -d
+    ```
+
+5.  **Appliquez les migrations de la base de données :**
+
+    ```bash
+    npx drizzle-kit migrate
+    ```
+
+6.  **Lancez le serveur en mode développement :**
+
+    ```bash
+    npm run dev
+    ```
+
+    L'API est maintenant accessible à l'adresse `http://localhost:3000`.
+
+---
+
+## 🔑 Variables d'Environnement
+
+Le fichier `.env` doit contenir les variables suivantes :
+
+```env
+# Configuration du serveur
+PORT=3000
+
+# Configuration de la base de données PostgreSQL
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=votre_user
+DB_PASSWORD=votre_mot_de_passe
+DB_NAME=budget_db
+
+# Configuration JWT
+JWT_SECRET=votre_cle_secrete_tres_longue_et_complexe
+```
+
+POST /auth/register Crée un nouvel utilisateur. Publique
+POST /auth/login Connecte un utilisateur et renvoie un token JWT. Publique
+GET /auth/me Renvoie les informations de l'utilisateur connecté. Privée (JWT)
