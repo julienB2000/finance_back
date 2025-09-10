@@ -14,3 +14,5 @@ export const users = pgTable("users", {
   // La date de création, avec une valeur par défaut
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export type User = typeof users.$inferSelect;

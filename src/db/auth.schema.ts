@@ -16,6 +16,8 @@ export const registerUserSchema = z.object({
     .min(6, { message: "Le mot de passe doit faire au moins 6 caractères" }),
 });
 
+export type RegisterUserDto = z.infer<typeof registerUserSchema>;
+
 // Schéma pour la connexion d'un utilisateur
 export const loginUserSchema = z.object({
   email: z

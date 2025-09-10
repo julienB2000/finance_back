@@ -1,10 +1,13 @@
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import { register } from "../services/user.service.js";
+import type { RegisterUserDto } from "../db/auth.schema.js";
 
-// Une fonction simple qui gère la requête GET /users
-export const postUser = (req: Request, res: Response) => {
-  console.log("body = ", req);
-  let user = req.body;
-  const returnUser = register(user);
-  res.status(200).json({ user: returnUser });
+export const postUser = (req: Request, res: Response, next: NextFunction) => {
+  const userData: RegisterUserDto = req.body;
+  try {
+    const returnUser = register(userData);
+    res.status(201).json({ user: returnUser });
+  } catch (error) {
+    next(error);
+  }
 };
