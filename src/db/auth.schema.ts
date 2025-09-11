@@ -27,3 +27,5 @@ export const loginUserSchema = z.object({
 
   password: z.string().min(1, { message: "Le mot de passe est requis" }),
 });
+
+export type loginUserDto = z.infer<typeof loginUserSchema>;
