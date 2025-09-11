@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import type { loginUserDto, RegisterUserDto } from "../db/auth.schema.js";
 import { and, eq } from "drizzle-orm";
 
+import jwt from "jsonwebtoken";
+
 export async function register(user: RegisterUserDto) {
   // Promise<Omit<User, "passwordHash">>
   const existingUser = await db
@@ -57,6 +59,14 @@ export async function login(email: string, password: string) {
   if (!isPasswordCorrect) {
     throw new Error("Email ou mot de passe incorrect.");
   }
+
+  const payload = {
+    id: user.id,
+    email: user.email,
+  };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" });
+
   const { passwordHash, ...userWithoutPassword } = user;
-  return userWithoutPassword;
+  return { user: userWithoutPassword, token };
 }
