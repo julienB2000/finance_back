@@ -4,7 +4,8 @@ import bcrypt from "bcryptjs";
 import type { RegisterUserDto } from "../db/auth.schema.js";
 import { eq } from "drizzle-orm";
 
-export async function register(user: RegisterUserDto): Promise<User> {
+export async function register(user: RegisterUserDto) {
+  // Promise<Omit<User, "passwordHash">>
   const existingUser = await db
     .select()
     .from(users)
@@ -25,7 +26,11 @@ export async function register(user: RegisterUserDto): Promise<User> {
       email: user.email,
       passwordHash: passwordHash,
     })
-    .returning();
+    .returning({
+      id: users.id,
+      email: users.email,
+      createdAt: users.createdAt,
+    });
 
   if (!userCreated || userCreated.length === 0) {
     const error = new Error(
