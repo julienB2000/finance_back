@@ -70,3 +70,21 @@ export async function login(email: string, password: string) {
   const { passwordHash, ...userWithoutPassword } = user;
   return { user: userWithoutPassword, token };
 }
+
+export async function getMe(id: number, email: string) {
+  const meArray = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.email, email), eq(users.id, id)))
+    .limit(1);
+  const me = meArray[0];
+
+  if (!me) {
+    const error = new Error("Utilisateur non trouvé.");
+    (error as any).statusCode = 404;
+    throw error;
+  }
+
+  const { passwordHash, ...meWithoutPassword } = me;
+  return meWithoutPassword;
+}

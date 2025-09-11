@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from "express";
-import { register, login } from "../services/user.service.js";
+import { register, login, getMe } from "../services/user.service.js";
 import type { loginUserDto, RegisterUserDto } from "../db/auth.schema.js";
 import type { RequestWithUser } from "../middlewares/auth.middleware.js";
 
@@ -31,10 +31,15 @@ export const loginUser = async (
   }
 };
 
-export const testJwt = async (
+export const me = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction
 ) => {
-  return res.status(200).json({ message: req.user });
+  try {
+    const me = await getMe(req.user.id, req.user.email);
+    res.status(201).json({ message: "This is me", me: me });
+  } catch (error) {
+    next(error);
+  }
 };
