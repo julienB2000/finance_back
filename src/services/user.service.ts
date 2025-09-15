@@ -1,7 +1,7 @@
-import { users, type User } from "../db/schema.js";
+import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import bcrypt from "bcryptjs";
-import type { loginUserDto, RegisterUserDto } from "../db/auth.schema.js";
+import type { RegisterUserDto, safeUser } from "../db/auth.schema.js";
 import { and, eq } from "drizzle-orm";
 
 import jwt from "jsonwebtoken";
@@ -71,7 +71,7 @@ export async function login(email: string, password: string) {
   return { user: userWithoutPassword, token };
 }
 
-export async function getMe(id: number, email: string) {
+export async function getMe(id: number, email: string): safeUser {
   const meArray = await db
     .select()
     .from(users)
@@ -87,4 +87,19 @@ export async function getMe(id: number, email: string) {
 
   const { passwordHash, ...meWithoutPassword } = me;
   return meWithoutPassword;
+}
+
+export async function deleteUser(id: number): safeUser {
+  const deletedUserArray = await db
+    .delete(users)
+    .where(eq(users.id, id))
+    .returning();
+  const deletedUser = deletedUserArray[0];
+  if (!deletedUser) {
+    const error = new Error("User not found");
+    (error as any).statusCode = 404;
+    throw error;
+  }
+  const { passwordHash, ...userWithoutPassword } = deletedUser;
+  return userWithoutPassword;
 }

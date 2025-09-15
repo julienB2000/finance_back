@@ -1,5 +1,10 @@
 import { type NextFunction, type Request, type Response } from "express";
-import { register, login, getMe } from "../services/user.service.js";
+import {
+  register,
+  login,
+  getMe,
+  deleteUser,
+} from "../services/user.service.js";
 import type { loginUserDto, RegisterUserDto } from "../db/auth.schema.js";
 import type { RequestWithUser } from "../middlewares/auth.middleware.js";
 
@@ -39,6 +44,20 @@ export const me = async (
   try {
     const me = await getMe(req.user.id, req.user.email);
     res.status(201).json({ message: "This is me", me: me });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removeUser = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = parseInt(req.params.id as string);
+    const deletedUser = await deleteUser(id);
+    res.status(201).json({ message: `User is deleted`, user: deletedUser });
   } catch (error) {
     next(error);
   }

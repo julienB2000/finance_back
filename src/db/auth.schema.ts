@@ -1,6 +1,7 @@
 // Fichier : src/schemas/auth.schema.ts
 
 import { z } from "zod";
+import type { User } from "./schema.js";
 
 // Schéma pour l'inscription d'un nouvel utilisateur
 export const registerUserSchema = z.object({
@@ -29,3 +30,5 @@ export const loginUserSchema = z.object({
 });
 
 export type loginUserDto = z.infer<typeof loginUserSchema>;
+
+export type safeUser = Promise<Omit<User, "passwordHash">>;
