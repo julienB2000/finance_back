@@ -23,6 +23,12 @@ export const accounts = pgTable("accounts", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
+export const categories = pgTable("categories", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100}).notNull(),
+  userId: integer("user_id").notNull().references(() => users.id, {onDelete: "cascade"}),
+});
+
 export type User = typeof users.$inferSelect;
 
 export type Account = typeof accounts.$inferSelect;
