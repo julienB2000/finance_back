@@ -1,6 +1,7 @@
 import { Router } from "express";
 import userRoutes from "./user.routes.js";
 import accountRoutes from "./account.routes.js";
+import categoryRoutes from "./category.routes.js"
 
 const router = Router();
 
@@ -8,5 +9,6 @@ const router = Router();
 // pour tout ce qui commence par /users
 router.use("/users", userRoutes);
 router.use("/accounts", accountRoutes);
+router.use("/category", categoryRoutes)
 
 export default router;

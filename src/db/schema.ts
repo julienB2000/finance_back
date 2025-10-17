@@ -14,6 +14,7 @@ import {
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
+  role: varchar('role').default('USER').notNull(),
   passwordHash: text("password_hash").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -49,8 +50,6 @@ export const transactions = pgTable("transaction", {
     .references(() => accounts.id, { onDelete: 'cascade' }),
     categoryId: integer('category_id')
     .references(() => categories.id, { onDelete: 'set null' }),
-
-
 });
 
 export type Transaction = typeof transactions.$inferSelect;
