@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { CreateAccountDto } from "../db/account.schema.js";
 import { db } from "../db/index.js";
 import { accounts, type Account } from "../db/schema.js";
@@ -32,4 +32,17 @@ export async function getUserAccount(userId: number) {
     throw error;
   }
   return userAccounts;
+}
+
+export async function deleteUserAccount(userId: number, accountId: number) {
+  const deletedAccountArray = await db
+    .delete(accounts)   
+    .where(and(eq(accounts.userId, userId), eq(accounts.id, accountId))).returning();
+  const deletedAccount = deletedAccountArray[0]
+  if (!deletedAccount) {
+    const error = new Error("This account cannot be deleted");
+    (error as any).statusCode = 409;    
+    throw error;
+  }
+  return deletedAccount;
 }
