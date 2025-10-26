@@ -1,4 +1,4 @@
-import type { CreateCategoryDto } from "../db/category.schema.js";
+import type { CreateCategoryDto } from "../schemas/category.schema.js";
 import { db } from "../db/index.js";
 import { categories } from "../db/schema.js";
 

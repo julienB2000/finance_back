@@ -5,7 +5,7 @@ import {
   getMe,
   deleteUser,
 } from "../services/user.service.js";
-import type { loginUserDto, RegisterUserDto } from "../db/auth.schema.js";
+import type { loginUserDto, RegisterUserDto } from "../schemas/auth.schema.js";
 import type { RequestWithUser } from "../middlewares/auth.middleware.js";
 
 export const postUser = async (

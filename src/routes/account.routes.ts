@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validate } from "../middlewares/validation.middleware.js";
-import { accountSchema } from "../db/account.schema.js";
+import { accountSchema } from "../schemas/account.schema.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import {
   getMyAccounts,

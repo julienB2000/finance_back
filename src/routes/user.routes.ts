@@ -6,9 +6,9 @@ import {
   removeUser,
 } from "../controllers/user.controller.js"; // On importe la fonction du contrôleur
 import { validate } from "../middlewares/validation.middleware.js";
-import { loginUserSchema, registerUserSchema } from "../db/auth.schema.js";
+import { loginUserSchema, registerUserSchema } from "../schemas/auth.schema.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
-import { idParamSchema } from "../db/common.schema.js";
+import { idParamSchema } from "../schemas/common.schema.js";
 
 const router = Router();
 
