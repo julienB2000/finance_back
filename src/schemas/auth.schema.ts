@@ -1,7 +1,7 @@
 // Fichier : src/schemas/auth.schema.ts
 
 import { z } from "zod";
-import type { User } from "./schema.js";
+import type { User } from "../db/schema.js";
 
 // Schéma pour l'inscription d'un nouvel utilisateur
 export const registerUserSchema = z.object({
