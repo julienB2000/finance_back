@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import type { CreateAccountDto } from "../db/account.schema.js";
+import type { CreateAccountDto } from "../schemas/account.schema.js";
 import { db } from "../db/index.js";
 import { accounts, type Account } from "../db/schema.js";
 

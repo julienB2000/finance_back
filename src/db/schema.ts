@@ -57,3 +57,5 @@ export type Transaction = typeof transactions.$inferSelect;
 export type User = typeof users.$inferSelect;
 
 export type Account = typeof accounts.$inferSelect;
+
+export type Categories = typeof categories.$inferSelect;

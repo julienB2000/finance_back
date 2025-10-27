@@ -1,7 +1,7 @@
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import bcrypt from "bcryptjs";
-import type { RegisterUserDto, safeUser } from "../db/auth.schema.js";
+import type { RegisterUserDto, safeUser } from "../schemas/auth.schema.js";
 import { and, eq } from "drizzle-orm";
 
 import jwt from "jsonwebtoken";
@@ -65,7 +65,7 @@ export async function login(email: string, password: string) {
     email: user.email,
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  const token = jwt.sign(payload, process.env.JWT_SECRET!);
 
   const { passwordHash, ...userWithoutPassword } = user;
   return { user: userWithoutPassword, token };
