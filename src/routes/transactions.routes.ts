@@ -1,39 +1,40 @@
 import { Router } from "express";
 import { validate } from "../middlewares/validation.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 import {
-  categorySchema,
-  updateCategorySchema,
-} from "../schemas/category.schema.js";
+  createTransactionSchema,
+  updateTransactionSchema,
+} from "../schemas/transaction.schema.js";
 import {
-  deleteCategory,
-  getCategory,
-  postCategory,
-  updateCategory,
-} from "../controllers/category.controller.js";
+  deleteTransaction,
+  getTransactions,
+  postTransaction,
+  updateTransaction,
+} from "../controllers/transaction.controller.js";
 import { idParamSchema } from "../schemas/common.schema.js";
 
 const router = Router();
 
 router.post(
   "/",
-  validate(categorySchema, "body"),
+  validate(createTransactionSchema, "body"),
   authMiddleware,
-  postCategory
+  postTransaction
 );
-router.get("/", authMiddleware, getCategory);
+router.get("/", authMiddleware, getTransactions);
 router.delete(
   "/:id",
   validate(idParamSchema, "params"),
   authMiddleware,
-  deleteCategory
+  deleteTransaction
 );
+
 router.patch(
   "/:id",
   validate(idParamSchema, "params"),
-  validate(updateCategorySchema, "body"),
+  validate(updateTransactionSchema, "body"),
   authMiddleware,
-  updateCategory
+  updateTransaction
 );
-
 export default router;
