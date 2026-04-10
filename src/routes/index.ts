@@ -3,6 +3,7 @@ import userRoutes from "./user.routes.js";
 import accountRoutes from "./account.routes.js";
 import categoryRoutes from "./category.routes.js";
 import transactionRoutes from "./transactions.routes.js";
+import statsRoutes from "./stats.routes.js";
 const router = Router();
 
 // On dit au routeur principal d'utiliser les routes des utilisateurs
@@ -11,5 +12,6 @@ router.use("/users", userRoutes);
 router.use("/accounts", accountRoutes);
 router.use("/category", categoryRoutes);
 router.use("/transaction", transactionRoutes);
+router.use("/stats", statsRoutes);
 
 export default router;

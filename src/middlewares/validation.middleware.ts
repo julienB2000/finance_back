@@ -6,7 +6,6 @@ export const validate =
   (schema: ZodSchema, source: "body" | "params" | "query") =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      // On choisit la bonne partie de la requête à valider
       let dataToValidate;
       switch (source) {
         case "body":
@@ -20,9 +19,8 @@ export const validate =
           break;
       }
 
-      // On parse les données sélectionnées
-      schema.parse(dataToValidate);
-
+      const parsedData = schema.parse(dataToValidate);
+      (req as any).validatedData = parsedData;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
